@@ -25,7 +25,7 @@ echo "GAMES_FOLDERS: $GAMES_FOLDERS"
 mkdir -pv $MC_BACKUP_GAMES_FOLDER
 
 for folder in $GAMES_FOLDERS; do
-    cp -vr $MC_HOME/$folder $MC_BACKUP_GAMES_FOLDER
+    cp -r $MC_HOME/$folder $MC_BACKUP_GAMES_FOLDER
 done
 
 
@@ -46,4 +46,4 @@ fi
 
 # relaunch server
 echo "Relaunch server"
-screen -X stuff './launch_minecraft_server.sh latest-game'
+screen -X stuff './launch_minecraft_server.sh latest-game^M'
