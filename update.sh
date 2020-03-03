@@ -9,6 +9,17 @@ MC_LINK=$(echo $MC_VERSION_LINK | cut -d" " -f2)
 
 wget --quiet $MC_LINK -O /tmp/mc/server-$MC_VERSION.jar
 
+
+# backup games
+GAMES_FOLDERS=$(cd $MC_HOME && ls -d */ | grep -v logs | grep -v crash-reports | grep -v latest-game)
+echo "GAMES_FOLDERS: $GAMES_FOLDERS"
+mkdir -pv $MC_BACKUP_GAMES_FOLDER
+
+for folder in $GAMES_FOLDER; do
+    cp -vr folder $MC_BACKUP_GAMES_FOLDER
+done
+
+
 CK_NEWSERVER=$(cksum /tmp/mc/server-$MC_VERSION.jar | cut -d' ' -f1,2)
 CK_OLDSERVER=$(cksum $MC_HOME/server.jar | cut -d' ' -f1,2)
 echo "CK_NEWSERVER: $CK_NEWSERVER"
@@ -21,14 +32,6 @@ else
     # kill actual server
     screen -X stuff 'stop^M'
     sleep 10
-    # backup games
-    GAMES_FOLDERS=$(cd $MC_HOME && ls -d */ | grep -v logs | grep -v crash-reports | grep -v latest-game)
-    echo "GAMES_FOLDERS: $GAMES_FOLDERS"
-    mkdir -pv $MC_BACKUP_GAMES_FOLDER
-
-    for folder in $GAMES_FOLDER; do
-        cp -vr folder $MC_BACKUP_GAMES_FOLDER
-    done
     # update server
     unlink $MC_HOME/server.jar
     cp -v /tmp/mc/server-$MC_VERSION_LINK.jar $MC_HOME/
