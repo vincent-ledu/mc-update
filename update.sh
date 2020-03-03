@@ -20,7 +20,7 @@ else
     screen -X stuff 'stop^M'
     sleep 10
     # backup games
-    GAMES_FOLDERS=$(cd $MC_HOME && ls -d */ | grep -v logs | grep -v crash-reports)
+    GAMES_FOLDERS=$(cd $MC_HOME && ls -d */ | grep -v logs | grep -v crash-reports | grep -v latest-game)
     mkdir -p $MC_BACKUP_GAMES_FOLDER
     for folder in $GAMES_FOLDER; do
         cp -vr folder $MC_BACKUP_GAMES_FOLDER
