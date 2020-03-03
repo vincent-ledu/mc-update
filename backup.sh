@@ -22,3 +22,5 @@ tar cvzf $MC_BACKUP_GAMES_FOLDER.tgz $MC_BACKUP_GAMES_FOLDER && rm -rf $MC_BACKU
 
 screen -X stuff 'save-on^M'
 screen -X stuff 'say Backup is done!^M'
+
+find /opt/minecraft/backup_games/ -type f -mtime +7 -exec rm -f {} \;
