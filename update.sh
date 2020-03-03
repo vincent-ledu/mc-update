@@ -16,7 +16,7 @@ echo "GAMES_FOLDERS: $GAMES_FOLDERS"
 mkdir -pv $MC_BACKUP_GAMES_FOLDER
 
 for folder in GAMES_FOLDER; do
-    cp -vr folder $MC_BACKUP_GAMES_FOLDER
+    cp -vr $folder $MC_BACKUP_GAMES_FOLDER
 done
 
 
