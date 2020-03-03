@@ -2,10 +2,12 @@
 
 MC_HOME=/opt/minecraft/server
 
+screen -X stuff 'say Backup Time!^M'
+
 screen -X stuff 'save-off^M'
 screen -X stuff 'save-all^M'
 
-sleep 10
+sleep 30
 
 CUR_VERSION=$(cat $MC_HOME/version.txt)
 MC_BACKUP_GAMES_FOLDER=/opt/minecraft/backup_games/$(date +%Y-%m-%d_%H%M%S)-$CUR_VERSION
@@ -19,3 +21,4 @@ done
 
 
 screen -X stuff 'save-on^M'
+screen -X stuff 'say Backup is done!^M'
