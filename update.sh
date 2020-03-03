@@ -3,14 +3,19 @@
 MC_HOME=/opt/minecraft/server
 MC_BACKUP_GAMES_FOLDER=/opt/minecraft/backup_games-$(date +%F)
 mkdir -p /tmp/mc/
+echo "Getting latest release"
 MC_VERSION_LINK=$(node index.js release)
 MC_VERSION=$(echo $MC_VERSION_LINK | cut -d" " -f1)
 MC_LINK=$(echo $MC_VERSION_LINK | cut -d" " -f2)
 
+echo "Latest release is version: $MV_VERSION"
+
+echo "Downloading last server.jar"
 wget --quiet $MC_LINK -O /tmp/mc/server-$MC_VERSION.jar
 
 
 # backup games
+# Backup current games folders
 GAMES_FOLDERS=$(cd $MC_HOME && ls -d */ | grep -v logs | grep -v crash-reports | grep -v latest-game)
 echo "GAMES_FOLDERS: $GAMES_FOLDERS"
 mkdir -pv $MC_BACKUP_GAMES_FOLDER
