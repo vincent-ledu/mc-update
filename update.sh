@@ -1,7 +1,7 @@
 #!/bin/bash
 
 MC_HOME=/opt/minecraft/server
-MC_BACKUP_GAMES_FOLDER=/opt/minecraft/backup_games-$(date +%F)
+MC_BACKUP_GAMES_FOLDER=/opt/minecraft/backup_games-$(date +%Y-%m-%d_%H%M%S)
 mkdir -p /tmp/mc/
 echo "Getting latest release"
 MC_VERSION_LINK=$(node index.js release)
