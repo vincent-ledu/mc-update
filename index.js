@@ -10,33 +10,33 @@ async function getLatestVersion(type) {
       for (; i < mc_versions_urls.length; i++) {
         if (mc_versions_urls[i].type == type) break;
       }
-      return mc_versions_urls[i].url
+      return mc_versions_urls[i]
     })
     .catch(function(error) {
-      console.log(error);
+      console.error(error);
       return "";
     });
 }
 
 async function getDownloadUrl(type) {
-  const url = await getLatestVersion(type)
+  const mc_version_info = await getLatestVersion(type)
   return axios
-    .get(url)
+    .get(mc_version_info.url)
     .then(function(response) {
       // handle success
-      console.log(
+      console.log(mc_version_info.id + " " +
         response.data.downloads.server.url
       );
       return response.data.downloads.server.url
     })
     .catch(function(error) {
-      console.log(error);
+      console.error(error);
       return "";
     });
 }
 
 if (process.argv.length <= 2) {
-  console.log("Please, indicate type of minecraft release, such as release, snapshot, ...")
+  console.error("Please, indicate type of minecraft release, such as release, snapshot, ...")
   process.exit(1)
 }
 
