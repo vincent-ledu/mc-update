@@ -43,6 +43,7 @@ function backupGames() {
     for folder in $GAMES_FOLDERS; do
         cp -r $MC_HOME/$folder $MC_BACKUP_GAMES_FOLDER
     done
+    tar cvzf $MC_BACKUP_GAMES_FOLDER.tgz $MC_BACKUP_GAMES_FOLDER
 }
 
 function updateServer() {
