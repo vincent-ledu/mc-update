@@ -1,7 +1,6 @@
 #!/bin/bash
 
 MC_HOME=/opt/minecraft/server
-MC_BACKUP_GAMES_FOLDER=/opt/minecraft/backup_games-$(date +%Y-%m-%d_%H%M%S)
 mkdir -p /tmp/mc/
 echo "Getting latest release"
 MC_VERSION_LINK=$(node index.js release)
@@ -20,9 +19,11 @@ wget --quiet $MC_LINK -O /tmp/mc/server-$MC_VERSION.jar
 # kill actual server
 echo "Stopping server then wait 10 secondes"
 screen -X stuff 'stop^M'
-sleep 10
+sleep 30
 # backup games
 # Backup current games folders
+CUR_VERSION=$(cat $MC_HOME/version.txt)
+MC_BACKUP_GAMES_FOLDER=/opt/minecraft/backup_games/$(date +%Y-%m-%d_%H%M%S)-$CUR_VERSION
 GAMES_FOLDERS=$(cd $MC_HOME && ls -d */ | grep -v logs | grep -v crash-reports | grep -v latest-game)
 echo "GAMES_FOLDERS: $GAMES_FOLDERS"
 mkdir -pv $MC_BACKUP_GAMES_FOLDER
@@ -41,10 +42,12 @@ if [ "$CK_NEWSERVER" = "$CK_OLDSERVER" ]; then
     echo "************* Nothing to do, already latest release"
 else
     echo "************* updating server"
+    CUR_VERSION=$(cat $MC_HOME/version.txt)
     # update server
     unlink $MC_HOME/server.jar
     cp -v /tmp/mc/server-$MC_VERSION.jar $MC_HOME/
     ln -s $MC_HOME/server-$MC_VERSION.jar $MC_HOME/server.jar
+    echo $MC_VERSION > $MC_HOME/version.txt
 fi
 
 # relaunch server
