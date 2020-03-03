@@ -50,3 +50,5 @@ fi
 # relaunch server
 echo "Relaunch server"
 screen -X stuff './launch_minecraft_server.sh latest-game^M'
+
+rm -rf /tmp/mc
