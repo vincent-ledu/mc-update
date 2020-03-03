@@ -8,6 +8,9 @@ MC_VERSION_LINK=$(node index.js release)
 MC_VERSION=$(echo $MC_VERSION_LINK | cut -d" " -f1)
 MC_LINK=$(echo $MC_VERSION_LINK | cut -d" " -f2)
 
+echo "MC_LINK: |$MC_LINK|"
+echo "MC_VERSION: |$MC_VERSION|"
+
 echo "Latest release is version: $MC_VERSION"
 
 echo "Downloading last server.jar"
@@ -40,8 +43,8 @@ else
     echo "************* updating server"
     # update server
     unlink $MC_HOME/server.jar
-    cp -v /tmp/mc/server-$MC_VERSION_LINK.jar $MC_HOME/
-    ln -s $MC_HOME/server-$MC_VERSION_LINK.jar $MC_HOME/server.jar
+    cp -v /tmp/mc/server-$MC_VERSION.jar $MC_HOME/
+    ln -s $MC_HOME/server-$MC_VERSION.jar $MC_HOME/server.jar
 fi
 
 # relaunch server
