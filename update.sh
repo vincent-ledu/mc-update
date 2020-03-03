@@ -15,7 +15,7 @@ GAMES_FOLDERS=$(cd $MC_HOME && ls -d */ | grep -v logs | grep -v crash-reports |
 echo "GAMES_FOLDERS: $GAMES_FOLDERS"
 mkdir -pv $MC_BACKUP_GAMES_FOLDER
 
-for folder in $GAMES_FOLDER; do
+for folder in GAMES_FOLDER; do
     cp -vr folder $MC_BACKUP_GAMES_FOLDER
 done
 
