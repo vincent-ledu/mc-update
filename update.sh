@@ -14,6 +14,10 @@ echo "Downloading last server.jar"
 wget --quiet $MC_LINK -O /tmp/mc/server-$MC_VERSION.jar
 
 
+# kill actual server
+echo "Stopping server then wait 10 secondes"
+screen -X stuff 'stop^M'
+sleep 10
 # backup games
 # Backup current games folders
 GAMES_FOLDERS=$(cd $MC_HOME && ls -d */ | grep -v logs | grep -v crash-reports | grep -v latest-game)
@@ -34,14 +38,12 @@ if [ "$CK_NEWSERVER" = "$CK_OLDSERVER" ]; then
     echo "************* Nothing to do, already latest release"
 else
     echo "************* updating server"
-    # kill actual server
-    screen -X stuff 'stop^M'
-    sleep 10
     # update server
     unlink $MC_HOME/server.jar
     cp -v /tmp/mc/server-$MC_VERSION_LINK.jar $MC_HOME/
     ln -s $MC_HOME/server-$MC_VERSION_LINK.jar $MC_HOME/server.jar
-    # relaunch server
-    screen -X stuff './launch_minecraft_server.sh latest-game'
 fi
 
+# relaunch server
+echo "Relaunch server"
+screen -X stuff './launch_minecraft_server.sh latest-game'
