@@ -8,7 +8,7 @@ MC_VERSION_LINK=$(node index.js release)
 MC_VERSION=$(echo $MC_VERSION_LINK | cut -d" " -f1)
 MC_LINK=$(echo $MC_VERSION_LINK | cut -d" " -f2)
 
-echo "Latest release is version: $MV_VERSION"
+echo "Latest release is version: $MC_VERSION"
 
 echo "Downloading last server.jar"
 wget --quiet $MC_LINK -O /tmp/mc/server-$MC_VERSION.jar
