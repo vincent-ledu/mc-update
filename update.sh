@@ -31,7 +31,8 @@ function downloadLatestRelease() {
 }
 
 function isMinecraftLaunched() {
-    return ps -ef | grep "/opt/minecraft/server/server.jar" | grep -v grep
+    ps -ef | grep "/opt/minecraft/server/server.jar" | grep -v "grep"
+    return $?
 }
 
 # kill actual server
