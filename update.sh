@@ -11,7 +11,7 @@ MC_HOME=/opt/minecraft/server
 function downloadLatestRelease() {
     mkdir -p /tmp/mc/
     echo "Getting latest release"
-    MC_VERSION_LINK=$(node index.js $RELEASE_TYPE)
+    MC_VERSION_LINK=$(node ~/mc-update/index.js $RELEASE_TYPE)
     MC_VERSION=$(echo $MC_VERSION_LINK | cut -d" " -f1)
     MC_LINK=$(echo $MC_VERSION_LINK | cut -d" " -f2)
 
