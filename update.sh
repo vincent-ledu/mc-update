@@ -6,6 +6,7 @@ else
     RELEASE_TYPE=$1
 fi
 MC_HOME=/opt/minecraft/server
+CUR_VERSION=$(cat $MC_HOME/version.txt || die "$MC_HOME/version.txt not found")
 
 # error handling
 function die() {
@@ -23,8 +24,13 @@ function downloadLatestRelease() {
 
     echo "MC_LINK: |$MC_LINK|"
     echo "MC_VERSION: |$MC_VERSION|"
+    if [ "$MC_VERSION" = "$CUR_VERSION" ]; then
+        echo "Server is already latest $RELEASE_TYPE. Exiting."
+        exit 0
+    fi
 
     echo "Latest release is version: $MC_VERSION"
+    
 
     echo "Downloading last server.jar"
     wget --quiet $MC_LINK -O /tmp/mc/server-$MC_VERSION.jar || die "Cannot download $MC_LINK to /tmp/mc/server-$MC_VERSION.jar"
@@ -44,7 +50,6 @@ function stopServer() {
 function backupGames() {
     # backup games
     # Backup current games folders
-    CUR_VERSION=$(cat $MC_HOME/version.txt || die "$MC_HOME/version.txt not found")
     MC_BACKUP_GAMES_FOLDER=/opt/minecraft/backup_games/$(date +%Y-%m-%d_%H%M%S)-$CUR_VERSION
     GAMES_FOLDERS=$(cd $MC_HOME && ls -d */ | grep -v logs | grep -v crash-reports | grep -v latest-game)
     echo "GAMES_FOLDERS: $GAMES_FOLDERS"
@@ -67,7 +72,6 @@ function updateServer() {
         echo "************* Nothing to do, already latest release"
     else
         echo "************* Updating server"
-        CUR_VERSION=$(cat $MC_HOME/version.txt  || die "$MC_HOME/version.txt not found")
         # update server
         unlink $MC_HOME/server.jar
         cp -v /tmp/mc/server-$MC_VERSION.jar $MC_HOME/
