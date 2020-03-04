@@ -80,7 +80,7 @@ function updateServer() {
 function launchServer() {
     # relaunch server
     echo "Relaunch server"
-    screen -ls && screen -X stuff './launch_minecraft_server.sh latest-game^M' || screen -dmS minecraft && screen -X stuff 'cd $MC_HOME && ./launch_minecraft_server.sh latest-game^M'
+    screen -ls && screen -X stuff './launch_minecraft_server.sh latest-game^M' || screen -dmS minecraft && screen -X stuff "cd $MC_HOME && ./launch_minecraft_server.sh latest-game^M"
 }
 
 downloadLatestRelease
