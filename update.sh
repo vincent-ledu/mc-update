@@ -50,15 +50,16 @@ function stopServer() {
 function backupGames() {
     # backup games
     # Backup current games folders
-    MC_BACKUP_GAMES_FOLDER=/opt/minecraft/backup_games/$(date +%Y-%m-%d_%H%M%S)-$CUR_VERSION
+    MC_BACKUP_FOLDER_BASE=/opt/minecraft/backup_games
+    MC_BACKUP_GAMES_FOLDER=$(date +%Y-%m-%d_%H%M%S)-$CUR_VERSION
     GAMES_FOLDERS=$(cd $MC_HOME && ls -d */ | grep -v logs | grep -v crash-reports | grep -v latest-game)
     echo "GAMES_FOLDERS: $GAMES_FOLDERS"
     mkdir -pv $MC_BACKUP_GAMES_FOLDER
 
     for folder in $GAMES_FOLDERS; do
-        cp -r $MC_HOME/$folder $MC_BACKUP_GAMES_FOLDER || die "Error while copying $MC_HOME/$folder $MC_BACKUP_GAMES_FOLDER. Aborting..."
+        cp -r $MC_HOME/$folder $MC_BACKUP_FOLDER_BASE/$MC_BACKUP_GAMES_FOLDER || die "Error while copying $MC_HOME/$folder $MC_BACKUP_FOLDER_BASE/$MC_BACKUP_GAMES_FOLDER. Aborting..."
     done
-    tar cvzf $MC_BACKUP_GAMES_FOLDER.tgz $MC_BACKUP_GAMES_FOLDER && rm -rf $MC_BACKUP_GAMES_FOLDER
+    cd $MC_BACKUP_FOLDER_BASE && tar cvzf $MC_BACKUP_GAMES_FOLDER.tgz $MC_BACKUP_GAMES_FOLDER && rm -rf $MC_BACKUP_GAMES_FOLDER
 
 }
 
