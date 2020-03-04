@@ -54,7 +54,7 @@ function backupGames() {
     MC_BACKUP_GAMES_FOLDER=$(date +%Y-%m-%d_%H%M%S)-$CUR_VERSION
     GAMES_FOLDERS=$(cd $MC_HOME && ls -d */ | grep -v logs | grep -v crash-reports | grep -v latest-game)
     echo "GAMES_FOLDERS: $GAMES_FOLDERS"
-    mkdir -pv $MC_BACKUP_GAMES_FOLDER
+    mkdir -pv $MC_BACKUP_FOLDER_BASE/$MC_BACKUP_GAMES_FOLDER
 
     for folder in $GAMES_FOLDERS; do
         cp -r $MC_HOME/$folder $MC_BACKUP_FOLDER_BASE/$MC_BACKUP_GAMES_FOLDER || die "Error while copying $MC_HOME/$folder $MC_BACKUP_FOLDER_BASE/$MC_BACKUP_GAMES_FOLDER. Aborting..."
