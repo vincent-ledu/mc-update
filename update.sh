@@ -7,11 +7,17 @@ else
 fi
 MC_HOME=/opt/minecraft/server
 
+# error handling
+function die() {
+    echo "Error: $1"
+    exit 1
+}
+
 # Download latest release or snapshot
 function downloadLatestRelease() {
-    mkdir -p /tmp/mc/
+    mkdir -p /tmp/mc/ || die "cannot create /tmp/mc"
     echo "Getting latest release"
-    MC_VERSION_LINK=$(node ~/mc-update/index.js $RELEASE_TYPE)
+    MC_VERSION_LINK=$(node ~/mc-update/index.js $RELEASE_TYPE || die "Cannot get Minecraft Version")
     MC_VERSION=$(echo $MC_VERSION_LINK | cut -d" " -f1)
     MC_LINK=$(echo $MC_VERSION_LINK | cut -d" " -f2)
 
@@ -21,43 +27,46 @@ function downloadLatestRelease() {
     echo "Latest release is version: $MC_VERSION"
 
     echo "Downloading last server.jar"
-    wget --quiet $MC_LINK -O /tmp/mc/server-$MC_VERSION.jar
+    wget --quiet $MC_LINK -O /tmp/mc/server-$MC_VERSION.jar || die "Cannot download $MC_LINK to /tmp/mc/server-$MC_VERSION.jar"
+}
+
+function isMinecraftLaunched() {
+    return ps -ef | grep "/opt/minecraft/server/server.jar" | grep -v grep
 }
 
 # kill actual server
 function stopServer() {
     echo "Stopping server then wait 30 secondes"
-    screen -X stuff 'stop^M'
-    sleep 30
+    isMinecraftLaunched && screen -ls && screen -X stuff 'stop^M' && sleep 30
 }
 
 function backupGames() {
     # backup games
     # Backup current games folders
-    CUR_VERSION=$(cat $MC_HOME/version.txt)
+    CUR_VERSION=$(cat $MC_HOME/version.txt || die "$MC_HOME/version.txt not found")
     MC_BACKUP_GAMES_FOLDER=/opt/minecraft/backup_games/$(date +%Y-%m-%d_%H%M%S)-$CUR_VERSION
     GAMES_FOLDERS=$(cd $MC_HOME && ls -d */ | grep -v logs | grep -v crash-reports | grep -v latest-game)
     echo "GAMES_FOLDERS: $GAMES_FOLDERS"
     mkdir -pv $MC_BACKUP_GAMES_FOLDER
 
     for folder in $GAMES_FOLDERS; do
-        cp -r $MC_HOME/$folder $MC_BACKUP_GAMES_FOLDER
+        cp -r $MC_HOME/$folder $MC_BACKUP_GAMES_FOLDER || die "Error while copying $MC_HOME/$folder $MC_BACKUP_GAMES_FOLDER. Aborting..."
     done
     tar cvzf $MC_BACKUP_GAMES_FOLDER.tgz $MC_BACKUP_GAMES_FOLDER && rm -rf $MC_BACKUP_GAMES_FOLDER
 
 }
 
 function updateServer() {
-    CK_NEWSERVER=$(cksum /tmp/mc/server-$MC_VERSION.jar | cut -d' ' -f1,2)
-    CK_OLDSERVER=$(cksum $MC_HOME/server.jar | cut -d' ' -f1,2)
+    CK_NEWSERVER=$(cksum /tmp/mc/server-$MC_VERSION.jar | cut -d' ' -f1,2 || die "cksum /tmp/mc/server-$MC_VERSION.jar failed")
+    CK_OLDSERVER=$(cksum $MC_HOME/server.jar | cut -d' ' -f1,2 || die "cksum $MC_HOME/server.jar failed")
     echo "CK_NEWSERVER: $CK_NEWSERVER"
     echo "CK_OLDSERVER: $CK_OLDSERVER"
 
     if [ "$CK_NEWSERVER" = "$CK_OLDSERVER" ]; then
         echo "************* Nothing to do, already latest release"
     else
-        echo "************* updating server"
-        CUR_VERSION=$(cat $MC_HOME/version.txt)
+        echo "************* Updating server"
+        CUR_VERSION=$(cat $MC_HOME/version.txt  || die "$MC_HOME/version.txt not found")
         # update server
         unlink $MC_HOME/server.jar
         cp -v /tmp/mc/server-$MC_VERSION.jar $MC_HOME/
@@ -70,7 +79,7 @@ function updateServer() {
 function launchServer() {
     # relaunch server
     echo "Relaunch server"
-    screen -X stuff './launch_minecraft_server.sh latest-game^M'
+    screen -ls && screen -X stuff './launch_minecraft_server.sh latest-game^M' || screen -S minecraft && screen -X stuff './launch_minecraft_server.sh latest-game^M'
 }
 
 downloadLatestRelease
