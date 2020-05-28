@@ -50,7 +50,7 @@ function stopServer() {
 function backupGames() {
     # backup games
     # Backup current games folders
-    MC_BACKUP_FOLDER_BASE=/opt/minecraft/backup_games
+    MC_BACKUP_FOLDER_BASE=/mnt/tnas/minecraft_backup
     MC_BACKUP_GAMES_FOLDER=$(date +%Y-%m-%d_%H%M%S)-$CUR_VERSION
     GAMES_FOLDERS=$(cd $MC_HOME && ls -d */ | grep -v logs | grep -v crash-reports | grep -v latest-game)
     echo "GAMES_FOLDERS: $GAMES_FOLDERS"
